@@ -22,19 +22,19 @@ class X5DetectorConstruction(G4VUserDetectorConstruction):
  
      envelop_mat = nist.FindOrBuildMaterial("G4_AIR")
 
-#....Box
+
      box_x = 1*envelop_x 
      box_y = 1*envelop_y 
      box_z = 1*envelop_z      
 
-#....Skull
+
      mat1 = nist.FindOrBuildMaterial("G4_B-100_BONE")
 
-#....Water orb
+
 
      mat2 = nist.FindOrBuildMaterial("G4_WATER")
 
-#....Mozg
+
      xSemiAxis1 = 1.2*cm 
      ySemiAxis1 = 1.2*cm 
      zSemiAxis1 = 1*cm 
@@ -47,10 +47,10 @@ class X5DetectorConstruction(G4VUserDetectorConstruction):
      zSemiAxis2 = 2.5*cm 
      mat4 = nist.FindOrBuildMaterial("G4_Acetone")
 
-#....Check for Overlaps
+
      checkOverlaps = True
  
-#....World creating 
+ 
      world_x = 1.5*envelop_x
      world_y = 1.5*envelop_y
      world_z = 1.5*envelop_z
@@ -63,12 +63,12 @@ class X5DetectorConstruction(G4VUserDetectorConstruction):
      pWorld = G4PVPlacement(None, G4ThreeVector(),
                             lWorld, "World", None, False,
                             0, checkOverlaps)
-#....Room
+
      sBox = G4Box("Box", 0.5*box_x, 0.5*box_y, 0.5*box_z)
      lBox = G4LogicalVolume(sBox, envelop_mat, "Box")
      G4PVPlacement(None, G4ThreeVector(), lBox, "Box", lWorld, False, 0, checkOverlaps)
 
-#....Geometry volume creating 
+
      sSphere = G4Sphere("Skull", 0.45*envelop_x, 0.5*envelop_x, 2*math.pi, 2*math.pi, 0, 2*math.pi)
      sOrb = G4Orb("Blood", 0.45*envelop_x)
      sBrain1 = G4Ellipsoid("Brain1", xSemiAxis1, ySemiAxis1, zSemiAxis1, 0, 0)
