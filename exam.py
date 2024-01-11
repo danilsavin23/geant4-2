@@ -4,7 +4,7 @@ import sys
 from geant4_pybind import *
 import math 
 
-#Detector construction
+# Detector construction
 class ExamDetectorConstruction(G4VUserDetectorConstruction):
  
    def __init__(self):
@@ -20,6 +20,10 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
 
       envelop_mat = nist.FindOrBuildMaterial("G4_AIR")
 
+      case_x = 1.2*envelop_x
+      case_y = 1.2*envelop_y
+      case_z = 1.2*envelop_z
+
       zTrans = G4Transform3D(G4RotationMatrix(), G4ThreeVector(0.1*envelop_x, 0, 0.05*envelop_z))
 
 #.....Leg
@@ -32,43 +36,41 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       checkOverlaps = True
 
 #.....World creating 
-      world_x = 1.2*envelop_x
-      world_y = 1.2*envelop_y
-      world_z = 1.2*envelop_z
-
-      sWorld = G4Box("World", 0.5*world_x, 0.5*world_y, 0.5*world_z)
+      sWorld = G4Box("World", 0.5*envelop_x, 0.5*envelop_y, 0.5*envelop_z)
  
       lWorld = G4LogicalVolume(sWorld, envelop_mat, "World")
  
       pWorld = G4PVPlacement(None, G4ThreeVector(), lWorld, "World", None, False, 0, checkOverlaps)
 
-      sEnvelop = G4Box("Envelop", 0.5*envelop_x, 0.5*envelop_y,0.5*envelop_z)
-    
-      lEnvelop = G4LogicalVolume(sEnvelop, envelop_mat, "Envelop")
-
-      pEnvelop = G4PVPlacement(None, G4ThreeVector(),lEnvelop, "Envelop", lWorld, True, 0, checkOverlaps)
 #.....Geometry volume creating
+      sCase = G4Box("Case", 0.5*case_x, 0.5*case_y, 0.5*case_z)
 
       sLeg = G4Tubs("Leg", 0, 0.3*envelop_x, 0.5*envelop_y, 2*math.pi, 2*math.pi)
+      
       sProsthesis = G4Tubs("Prosthesis", 0, 0.05*envelop_x, 0.5*envelop_y, 2*math.pi, 2*math.pi)
+      
       sCut = G4SubtractionSolid("Cut", sProsthesis, sLeg, zTrans)
 
 #.....Logical volume creating
-
       lLeg = G4LogicalVolume(sLeg, mat_leg, "Leg")
+      
       lProsthesis = G4LogicalVolume(sProsthesis, mat_p, "Prosthesis")
 
-#.....Physical volume creating
+      lCase = G4LogicalVolume(sCase, envelop_mat, "Case")
 
-      G4PVPlacement(None, G4ThreeVector(), lLeg, "Leg", lWorld, True, 0, checkOverlaps)
+#.....Physical volume creating
+      G4PVPlacement(None, G4ThreeVector(), lCase, "Case", lWorld, False, 0, checkOverlaps)
+
+      G4PVPlacement(None, G4ThreeVector(), lLeg, "Leg", lCase, True, 0, checkOverlaps)
+      
       G4PVPlacement(None, G4ThreeVector(0.1*envelop_x, 0.05*envelop_y, 0), lProsthesis, "Prosthesis", lLeg, True, 0, checkOverlaps)
 
-      self.fScoringVolume = lLeg
+      self.fScoringVolume = lCase
 
       return pWorld
-#End of detector construction
+# End of detector construction
 
-#..........
+
 #Action Initialization
 
 class ExamActionInitialization(G4VUserActionInitialization):
@@ -125,9 +127,9 @@ class ExamPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
                 msg += "The gun will be place at the center."
                 G4Exception("ExamPrimaryGeneratorAction::GeneratePrimaries()", "MyCode0002", G4ExceptionSeverity.JustWarning, msg)
 
-            x0 = -0.5 * envSizeX 
-            y0 = -0.5 * envSizeY
-            z0 = -0.5 * envSizeZ
+            x0 =  -0.5* envSizeX 
+            y0 = -0.47* envSizeY
+            z0 =  -0.5* envSizeZ
             self.fParticleGun.SetParticlePosition(G4ThreeVector(x0, y0, z0))
             self.fParticleGun.GeneratePrimaryVertex(anEvent)
 #End of primary generator
