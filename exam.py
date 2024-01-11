@@ -25,11 +25,11 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       world_z = 1.3*envelop_z
       
       leg_radius = 0.3*envelop_x       
-      leg_height = 0.5*envelop_y
+      leg_height = 0.5*envelop_z
 
       case_x = 2.1*leg_radius
-      case_y = 1.2*leg_height
-      case_z = 1.05*envelop_z
+      case_y = 2.1*leg_radius
+      case_z = 2.1*leg_height
 
       
       zTrans = G4Transform3D(G4RotationMatrix(), G4ThreeVector(0.1*envelop_x, 0, 0.05*envelop_z))
