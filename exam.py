@@ -19,7 +19,11 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       envelop_z = 30*cm
 
       envelop_mat = nist.FindOrBuildMaterial("G4_AIR")
-
+      
+      world_x = 1.5*envelop_x
+      world_y = 1.5*envelop_y
+      world_z = 1.5*envelop_z
+      
       case_x = 1.2*envelop_x
       case_y = 1.2*envelop_y
       case_z = 1.2*envelop_z
@@ -36,7 +40,7 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       checkOverlaps = True
 
 #.....World creating 
-      sWorld = G4Box("World", 0.5*envelop_x, 0.5*envelop_y, 0.5*envelop_z)
+      sWorld = G4Box("World", 0.5*world_x, 0.5*world_y, 0.5*world_z)
  
       lWorld = G4LogicalVolume(sWorld, envelop_mat, "World")
  
@@ -127,9 +131,9 @@ class ExamPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
                 msg += "The gun will be place at the center."
                 G4Exception("ExamPrimaryGeneratorAction::GeneratePrimaries()", "MyCode0002", G4ExceptionSeverity.JustWarning, msg)
 
-            x0 =  -0.5* envSizeX 
-            y0 = -0.47* envSizeY
-            z0 =  -0.5* envSizeZ
+            x0 = -0.35*envSizeX 
+            y0 = -0.35* envSizeY
+            z0 = -0.35*envSizeZ
             self.fParticleGun.SetParticlePosition(G4ThreeVector(x0, y0, z0))
             self.fParticleGun.GeneratePrimaryVertex(anEvent)
 #End of primary generator
