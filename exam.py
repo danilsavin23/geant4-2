@@ -20,13 +20,13 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
 
       envelop_mat = nist.FindOrBuildMaterial("G4_AIR")
       
-      world_x = 1.5*envelop_x
-      world_y = 1.5*envelop_y
-      world_z = 1.5*envelop_z
+      world_x = 1.3*envelop_x
+      world_y = 1.3*envelop_y
+      world_z = 1.3*envelop_z
       
-      case_x = 1.2*envelop_x
-      case_y = 1.2*envelop_y
-      case_z = 1.2*envelop_z
+      case_x = 1.05*envelop_x
+      case_y = 1.05*envelop_y
+      case_z = 1.05*envelop_z
 
       zTrans = G4Transform3D(G4RotationMatrix(), G4ThreeVector(0.1*envelop_x, 0, 0.05*envelop_z))
 
@@ -53,7 +53,7 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       
       sProsthesis = G4Tubs("Prosthesis", 0, 0.05*envelop_x, 0.5*envelop_y, 2*math.pi, 2*math.pi)
       
-      sCut = G4SubtractionSolid("Cut", sProsthesis, sLeg, zTrans)
+      #sCut = G4SubtractionSolid("Noga", sProsthesis, sLeg, zTrans)
 
 #.....Logical volume creating
       lLeg = G4LogicalVolume(sLeg, mat_leg, "Leg")
@@ -69,7 +69,7 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       
       G4PVPlacement(None, G4ThreeVector(0.1*envelop_x, 0.05*envelop_y, 0), lProsthesis, "Prosthesis", lLeg, True, 0, checkOverlaps)
 
-      self.fScoringVolume = lCase
+      self.fScoringVolume = lLeg
 
       return pWorld
 # End of detector construction
@@ -116,7 +116,7 @@ class ExamPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
         envSizeZ = 0
     
         if self.fEnvelopeBox == None:
-            envLV = G4LogicalVolumeStore.GetInstance().GetVolume("World")
+            envLV = G4LogicalVolumeStore.GetInstance().GetVolume("Case")
 
             if envLV != None:
                 self.fEnvelopeBox = envLV.GetSolid()
@@ -131,9 +131,9 @@ class ExamPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
                 msg += "The gun will be place at the center."
                 G4Exception("ExamPrimaryGeneratorAction::GeneratePrimaries()", "MyCode0002", G4ExceptionSeverity.JustWarning, msg)
 
-            x0 = -0.35*envSizeX 
-            y0 = -0.35* envSizeY
-            z0 = -0.35*envSizeZ
+            x0 = -0.5*envSizeX 
+            y0 = -0.5* envSizeY
+            z0 = 0
             self.fParticleGun.SetParticlePosition(G4ThreeVector(x0, y0, z0))
             self.fParticleGun.GeneratePrimaryVertex(anEvent)
 #End of primary generator
