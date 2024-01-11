@@ -24,10 +24,14 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
       world_y = 1.3*envelop_y
       world_z = 1.3*envelop_z
       
-      case_x = 1.05*envelop_x
-      case_y = 1.05*envelop_y
+      legs_x = 0.3*envelop_x       
+      legs_y = 0.5*envelop_y
+
+      case_x = 2.1*legs_x
+      case_y = 1.2*legs_y
       case_z = 1.05*envelop_z
 
+      
       zTrans = G4Transform3D(G4RotationMatrix(), G4ThreeVector(0.1*envelop_x, 0, 0.05*envelop_z))
 
 #.....Leg
@@ -49,7 +53,7 @@ class ExamDetectorConstruction(G4VUserDetectorConstruction):
 #.....Geometry volume creating
       sCase = G4Box("Case", 0.5*case_x, 0.5*case_y, 0.5*case_z)
 
-      sLeg = G4Tubs("Leg", 0, 0.3*envelop_x, 0.5*envelop_y, 2*math.pi, 2*math.pi)
+      sLeg = G4Tubs("Leg", 0, legs_x, legs_y, 2*math.pi, 2*math.pi)
       
       sProsthesis = G4Tubs("Prosthesis", 0, 0.05*envelop_x, 0.5*envelop_y, 2*math.pi, 2*math.pi)
       
@@ -107,7 +111,7 @@ class ExamPrimaryGeneratorAction(G4VUserPrimaryGeneratorAction):
         particleTable = G4ParticleTable.GetParticleTable()
         particle = particleTable.FindParticle("neutron")
         self.fParticleGun.SetParticleDefinition(particle)
-        self.fParticleGun.SetParticleMomentumDirection(G4ThreeVector(1, 1, 1))
+        self.fParticleGun.SetParticleMomentumDirection(G4ThreeVector(1, 1, 0))
         self.fParticleGun.SetParticleEnergy(10*MeV)
 
     def GeneratePrimaries(self, anEvent):
